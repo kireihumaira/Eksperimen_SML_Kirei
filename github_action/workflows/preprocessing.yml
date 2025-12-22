@@ -1,0 +1,34 @@
+name: Preprocess Dataset
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+jobs:
+  preprocess:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scikit-learn scipy joblib
+
+      - name: Run preprocessing script
+        run: |
+          python preprocessing/automate_Cadheva-Kirei-Humaira.py
+
+      - name: Upload preprocessed dataset as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: adult_income_preprocessed
+          path: preprocessing/adult_income_preprocessing
